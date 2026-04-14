@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/' 
+baseURL = 'https://elegymythos.github.io/' 
 languageCode = 'en-us'
 theme = "JuiceBar"
 title = "Corthyn's Blog"
@@ -8,7 +8,7 @@ author = "Corthyn"
 description = "My site description"
 authorImage = "/images/profile.jpg"
 paginate = 5 
-Title = "test"
+Title = "Corthyn's Blog"
 content = "I'm Corthyn, nice to meet you(ˊ˘ˋ*)♡"
 imageUrl = "/images/avatar.jpg"
 
