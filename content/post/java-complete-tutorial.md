@@ -9,6 +9,411 @@ weight: 1
 
 > 本手册基于《菜鸟教程 Java 全册》及高校核心考点，对基础语法、数组、面向对象、常用API、异常处理进行了深度扩展，适合系统复习与背诵。
 
+## Java 学习路线图
+
+### 学习阶段划分
+
+**第一阶段：Java 基础（1-2个月）**
+- 开发环境搭建（JDK、IDE）
+- 基本语法、数据类型、运算符
+- 流程控制（if、switch、循环）
+- 数组与字符串
+- 面向对象基础（类、对象、封装）
+
+**第二阶段：Java 核心（2-3个月）**
+- 面向对象进阶（继承、多态、抽象类、接口）
+- 异常处理机制
+- 集合框架（List、Set、Map）
+- 泛型与类型系统
+- IO 流与文件操作
+- 多线程基础
+
+**第三阶段：Java 高级（2-3个月）**
+- 网络编程
+- 反射机制
+- 注解（Annotation）
+- 设计模式
+- JVM 原理与性能优化
+- 新特性（Lambda、Stream、模块化等）
+
+**第四阶段：企业级开发（持续学习）**
+- 数据库编程（JDBC）
+- Web 开发（Servlet、Spring 框架）
+- 微服务架构
+- 分布式系统
+- 项目实战
+
+### 推荐学习资源
+
+**官方文档**：
+- Oracle Java Documentation: https://docs.oracle.com/javase/
+- Java Language Specification: https://docs.oracle.com/javase/specs/
+
+**经典书籍**：
+- 《Java核心技术》- Cay S. Horstmann
+- 《Effective Java》- Joshua Bloch
+- 《Java编程思想》- Bruce Eckel
+- 《深入理解Java虚拟机》- 周志明
+
+**在线资源**：
+- 菜鸟教程：https://www.runoob.com/java/
+- LeetCode：算法练习
+- GitHub：开源项目学习
+
+---
+
+## Java 发展历程与版本演进
+
+### Java 的诞生与发展
+
+**1991年**：James Gosling 领导的 "Green Project" 开始，最初名为 "Oak"
+**1995年**：正式更名为 "Java"，Sun 公司发布 Java 1.0
+**1996年**：JDK 1.0 发布，包含 JVM、Applet、AWT
+**1997年**：JDK 1.1 发布，引入内部类、JDBC、RMI
+**1998年**：J2SE 1.2 发布，引入 Swing、Collections Framework
+**2000年**：J2SE 1.3 发布，引入 HotSpot JVM
+**2002年**：J2SE 1.4 发布，引入正则表达式、NIO
+**2004年**：J2SE 5.0 发布，重大更新：泛型、枚举、注解、自动装箱
+**2006年**：Java SE 6 发布，Sun 开源 Java（OpenJDK）
+**2011年**：Java SE 7 发布，try-with-resources、NIO.2
+**2014年**：Java SE 8（LTS）发布，Lambda、Stream API、新的日期时间 API
+**2017年**：Java SE 9 发布，模块化系统（JPMS）
+**2018年**：Java SE 11（LTS）发布，HTTP Client API、var 局部变量类型推断
+**2021年**：Java SE 17（LTS）发布，密封类、增强的伪随机数生成器
+**2023年**：Java SE 21（LTS）发布，虚拟线程、结构化并发
+
+### Java 版本选择建议
+
+**长期支持版本（LTS）**：
+- **Java 8**：企业主流版本，生态成熟，兼容性好
+- **Java 11**：现代化特性，推荐新项目使用
+- **Java 17**：最新 LTS，包含更多新特性
+- **Java 21**：最新 LTS，虚拟线程等重大改进
+
+**版本选择原则**：
+- 新项目：推荐 Java 11 或 Java 17
+- 企业项目：根据团队技术栈和依赖兼容性选择
+- 学习目的：建议从 Java 8 开始，逐步学习新特性
+
+---
+
+## Java 核心设计理念
+
+### Java 的设计哲学
+
+**1. 简单性（Simplicity）**
+- 语法相对简单，去除了 C++ 中的指针、多重继承、运算符重载等复杂特性
+- 自动内存管理（垃圾回收），降低内存管理负担
+
+**2. 面向对象（Object-Oriented）**
+- 一切皆对象（基本类型除外）
+- 封装、继承、多态三大特性
+- 更符合人类思维模式，便于建模复杂系统
+
+**3. 健壮性（Robustness）**
+- 强类型检查，编译时发现类型错误
+- 异常处理机制，优雅处理运行时错误
+- 自动垃圾回收，避免内存泄漏
+
+**4. 安全性（Security）**
+- 字节码验证，防止恶意代码
+- 安全管理器，控制资源访问
+- 没有指针，避免内存非法访问
+
+**5. 平台无关性（Platform Independence）**
+- "Write Once, Run Anywhere"
+- JVM 屏蔽底层操作系统差异
+- 字节码可在任何安装 JVM 的平台运行
+
+**6. 高性能（High Performance）**
+- JIT（Just-In-Time）编译器，运行时优化
+- HotSpot JVM 的自适应优化
+- 接近 C++ 的性能（部分场景）
+
+**7. 多线程（Multithreading）**
+- 内置多线程支持
+- 线程安全工具类丰富
+- 适合高并发应用开发
+
+**8. 动态性（Dynamic）**
+- 反射机制，运行时类型信息
+- 动态加载类
+- 适应变化的系统需求
+
+### Java vs 其他语言
+
+| 特性 | Java | C++ | Python | JavaScript |
+|:---|:---|:---|:---|:---|
+| 类型系统 | 静态强类型 | 静态强类型 | 动态强类型 | 动态弱类型 |
+| 内存管理 | 自动 GC | 手动管理 | 自动 GC | 自动 GC |
+| 运行方式 | 字节码 + JVM | 编译为机器码 | 解释执行 | 解释/JIT |
+| 多线程 | 内置支持 | 标准库支持 | GIL 限制 | 单线程事件循环 |
+| 性能 | 高 | 最高 | 较低 | 中等 |
+| 学习曲线 | 中等 | 陡峭 | 平缓 | 平缓 |
+| 应用领域 | 企业级、Android | 系统级、游戏 | 数据科学、AI | Web 前端、Node.js |
+
+---
+
+## 开发环境搭建详解
+
+### JDK 安装与配置
+
+**Windows 系统安装步骤**：
+
+1. **下载 JDK**
+   - 访问 Oracle 官网或 Adoptium（开源版本）
+   - 推荐下载 JDK 11 或 JDK 17 LTS 版本
+   - 选择对应系统版本（Windows x64）
+
+2. **安装 JDK**
+   ```
+   默认安装路径：C:\Program Files\Java\jdk-11.x.x
+   建议修改为：D:\Java\jdk-11.x.x（避免空格路径）
+   ```
+
+3. **配置环境变量**
+   ```
+   JAVA_HOME = D:\Java\jdk-11.x.x
+   Path = %JAVA_HOME%\bin（添加到 Path 变量）
+   CLASSPATH = .;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar
+   ```
+
+4. **验证安装**
+   ```bash
+   java -version
+   javac -version
+   ```
+
+**Linux/Mac 系统安装**：
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install openjdk-11-jdk
+
+# CentOS/RHEL
+sudo yum install java-11-openjdk-devel
+
+# Mac (使用 Homebrew)
+brew install openjdk@11
+
+# 验证
+java -version
+javac -version
+```
+
+### IDE 选择与配置
+
+**IntelliJ IDEA（推荐）**：
+- 社区版免费，功能强大
+- 智能代码补全、重构工具
+- 内置调试器、版本控制
+- 支持 Spring、Maven、Gradle
+
+**Eclipse**：
+- 开源免费，插件丰富
+- 经典 Java 开发工具
+- 适合大型企业项目
+
+**VS Code**：
+- 轻量级，启动快
+- 安装 Java Extension Pack
+- 适合轻量级开发
+
+**IDE 配置建议**：
+- 设置文件编码为 UTF-8
+- 配置代码格式化规则
+- 启用代码检查和提示
+- 配置 Git 版本控制
+
+### 第一个 Java 程序详解
+
+```java
+/**
+ * 文档注释：程序的入口类
+ * @author YourName
+ * @version 1.0
+ * @since 2025-01-01
+ */
+public class HelloWorld {
+    /**
+     * 程序主入口方法
+     * @param args 命令行参数数组
+     */
+    public static void main(String[] args) {
+        // 打印输出到控制台
+        System.out.println("Hello, World!");
+
+        // 打印命令行参数
+        if (args.length > 0) {
+            System.out.println("命令行参数：");
+            for (String arg : args) {
+                System.out.println("  " + arg);
+            }
+        }
+    }
+}
+```
+
+**编译与运行**：
+
+```bash
+# 编译源文件
+javac HelloWorld.java
+
+# 运行程序
+java HelloWorld
+
+# 带命令行参数运行
+java HelloWorld arg1 arg2 arg3
+
+# 查看字节码内容
+javap -c HelloWorld
+
+# 查看详细信息
+javap -verbose HelloWorld
+```
+
+**程序结构解析**：
+
+1. **类定义**：`public class HelloWorld`
+   - `public`：访问修饰符，表示公开可访问
+   - `class`：关键字，定义类
+   - `HelloWorld`：类名，必须与文件名相同
+
+2. **main 方法**：`public static void main(String[] args)`
+   - `public`：公开方法，JVM 可调用
+   - `static`：静态方法，无需创建对象
+   - `void`：无返回值
+   - `String[] args`：命令行参数数组
+
+3. **输出语句**：`System.out.println()`
+   - `System`：系统类
+   - `out`：标准输出流对象
+   - `println()`：打印并换行方法
+
+### 常见编译错误与解决
+
+**错误 1：找不到或无法加载主类**
+```
+错误: 找不到或无法加载主类 HelloWorld
+原因: java.lang.ClassNotFoundException: HelloWorld
+```
+**解决方法**：
+- 检查类名与文件名是否一致
+- 检查是否在正确的目录下运行
+- 检查 CLASSPATH 环境变量配置
+
+**错误 2：非法字符**
+```
+HelloWorld.java:3: 错误: 非法字符: '\uff1b'
+```
+**解决方法**：
+- 检查是否使用了中文标点符号
+- 确保使用英文半角符号
+
+**错误 3：需要 class、interface 或 enum**
+```
+HelloWorld.java:1: 错误: 需要 class、interface 或 enum
+```
+**解决方法**：
+- 检查文件编码是否为 UTF-8
+- 检查是否有语法错误
+
+---
+
+## Java 程序运行机制深度解析
+
+### Java 程序执行流程
+
+```
+源代码 (.java)
+    ↓
+编译器 (javac)
+    ↓
+字节码 (.class)
+    ↓
+类加载器 (ClassLoader)
+    ↓
+字节码验证器 (Bytecode Verifier)
+    ↓
+解释器 / JIT 编译器
+    ↓
+运行时数据区 (Runtime Data Area)
+    ↓
+操作系统 / 硬件
+```
+
+### JVM 内存结构
+
+**1. 方法区（Method Area）**
+- 存储类信息、常量、静态变量
+- 线程共享，JVM 启动时创建
+- JDK 8 前称为"永久代"，JDK 8 后改为"元空间"（Metaspace）
+
+**2. 堆（Heap）**
+- 存储对象实例和数组
+- 线程共享，GC 主要工作区域
+- 分为新生代（Eden、Survivor）和老年代
+
+**3. 栈（Stack）**
+- 每个线程独有，存储局部变量、方法调用
+- 包含操作数栈、局部变量表
+- 方法调用时创建栈帧
+
+**4. 程序计数器（Program Counter Register）**
+- 记录当前线程执行的字节码行号
+- 每个线程独有
+
+**5. 本地方法栈（Native Method Stack）**
+- 为 Native 方法服务
+- 与栈类似，但用于本地方法
+
+### 垃圾回收机制简介
+
+**垃圾回收算法**：
+
+1. **标记-清除（Mark-Sweep）**
+   - 标记存活对象，清除未标记对象
+   - 缺点：内存碎片
+
+2. **复制算法（Copying）**
+   - 将存活对象复制到另一块区域
+   - 适合新生代，效率高
+
+3. **标记-整理（Mark-Compact）**
+   - 标记存活对象，整理到一端
+   - 适合老年代，无碎片
+
+**常见垃圾回收器**：
+
+- **Serial GC**：单线程，适合客户端应用
+- **Parallel GC**：多线程，吞吐量优先
+- **CMS GC**：并发标记清除，低延迟
+- **G1 GC**：分区回收，JDK 9 默认
+- **ZGC**：低延迟，JDK 11 引入
+
+**GC 调优参数**：
+
+```bash
+# 设置堆初始大小
+-Xms512m
+
+# 设置堆最大大小
+-Xmx1024m
+
+# 设置新生代大小
+-Xmn256m
+
+# 选择垃圾回收器
+-XX:+UseG1GC
+
+# 打印 GC 日志
+-XX:+PrintGCDetails
+```
+
+---
+
 ## 第一章 Java 语言基础（扩展详解）
 
 ### 1.1 Java 简介与开发环境
@@ -1387,4 +1792,838 @@ public class TestShape {
 ---
 
 > **复习建议**：本扩展手册覆盖了 Java 基础到异常处理的核心内容。请结合代码示例，重点理解面向对象的三大特性、字符串不可变性、集合与异常的区别。建议动手编写每个章节的典型代码（如学生类、动物多态、自定义异常），并默写常见 API 方法签名。祝考试顺利！
->
+
+---
+
+## 第六章 集合框架（Collection Framework）—— 核心数据结构
+
+### 6.1 集合体系概览
+
+Java 集合框架位于 `java.util` 包，主要分为两大体系：
+
+```
+Collection (单值集合根接口)
+├── List (有序、可重复)
+│   ├── ArrayList (动态数组，查询快，增删慢)
+│   ├── LinkedList (双向链表，增删快，查询慢)
+│   └── Vector (线程安全的动态数组，已过时)
+├── Set (无序、不可重复)
+│   ├── HashSet (哈希表实现，查询最快)
+│   │   └── LinkedHashSet (保持插入顺序)
+│   └── TreeSet (红黑树实现，自动排序)
+└── Queue (队列)
+    ├── LinkedList (双端队列)
+    └── PriorityQueue (优先队列)
+
+Map (键值对集合根接口)
+├── HashMap (哈希表实现，允许 null 键值)
+│   └── LinkedHashMap (保持插入或访问顺序)
+├── TreeMap (红黑树实现，键自动排序)
+├── Hashtable (线程安全，不允许 null，已过时)
+└── ConcurrentHashMap (线程安全的高性能 Map)
+```
+
+### 6.2 List 接口详解
+
+**ArrayList**：
+- 底层是动态数组，初始容量 10，扩容机制：`newCapacity = oldCapacity + (oldCapacity >> 1)`（约 1.5 倍）。
+- 适合随机访问（`get(int index)`），不适合频繁插入删除。
+
+```java
+List<String> list = new ArrayList<>();
+list.add("A");
+list.add(0, "B");           // 在索引 0 插入
+list.set(1, "C");           // 替换索引 1 的元素
+String s = list.get(0);     // 获取元素
+list.remove(0);             // 按索引删除
+list.remove("A");           // 按对象删除（首次出现）
+int index = list.indexOf("C");  // 查找索引
+boolean contains = list.contains("C");  // 是否包含
+```
+
+**LinkedList**：
+- 底层是双向链表，每个节点存储前后指针。
+- 适合频繁插入删除，不适合随机访问。
+
+```java
+LinkedList<String> linked = new LinkedList<>();
+linked.addFirst("First");   // 头部插入
+linked.addLast("Last");     // 尾部插入
+String first = linked.getFirst();
+String last = linked.getLast();
+linked.removeFirst();
+linked.removeLast();
+```
+
+### 6.3 Set 接口详解
+
+**HashSet**：
+- 基于 `HashMap` 实现，元素作为 `HashMap` 的 key。
+- 不保证迭代顺序，允许 `null` 元素。
+- 判断元素唯一性：先调用 `hashCode()`，若相同再调用 `equals()`。
+
+```java
+Set<String> set = new HashSet<>();
+set.add("A");
+set.add("A");   // 重复元素，不会添加
+set.add(null);  // 允许 null
+boolean isAdded = set.add("B");  // 返回是否添加成功
+```
+
+**TreeSet**：
+- 基于红黑树实现，元素自动排序（自然排序或定制排序）。
+- 元素必须实现 `Comparable` 接口，或构造时提供 `Comparator`。
+
+```java
+// 自然排序（元素实现 Comparable）
+Set<Integer> treeSet = new TreeSet<>();
+treeSet.add(5);
+treeSet.add(1);
+treeSet.add(3);
+// 迭代输出：1, 3, 5
+
+// 定制排序（提供 Comparator）
+Set<String> customSet = new TreeSet<>((s1, s2) -> s2.compareTo(s1));  // 降序
+customSet.add("B");
+customSet.add("A");
+customSet.add("C");
+// 迭代输出：C, B, A
+```
+
+### 6.4 Map 接口详解
+
+**HashMap**：
+- JDK 1.8 前：数组 + 链表；JDK 1.8 后：数组 + 链表 + 红黑树（链表长度 ≥ 8 且数组长度 ≥ 64 时转红黑树）。
+- 初始容量 16，负载因子 0.75，扩容为原来的 2 倍。
+- `hashCode()` 相同但 `equals()` 不同 → 哈希冲突 → 链表/红黑树存储。
+
+```java
+Map<String, Integer> map = new HashMap<>();
+map.put("A", 1);
+map.put("B", 2);
+map.put("A", 3);   // 覆盖旧值，返回旧值 1
+Integer value = map.get("A");      // 3
+Integer defaultValue = map.getOrDefault("C", 0);  // 0
+boolean containsKey = map.containsKey("A");   // true
+boolean containsValue = map.containsValue(2); // true
+map.remove("A");
+map.clear();
+
+// 遍历方式
+// 1. 遍历键
+for (String key : map.keySet()) {
+    System.out.println(key + ": " + map.get(key));
+}
+// 2. 遍历值
+for (Integer val : map.values()) {
+    System.out.println(val);
+}
+// 3. 遍历键值对（推荐）
+for (Map.Entry<String, Integer> entry : map.entrySet()) {
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+}
+// 4. forEach + Lambda（JDK 8+）
+map.forEach((k, v) -> System.out.println(k + ": " + v));
+```
+
+**TreeMap**：
+- 基于红黑树，键自动排序。
+- 提供导航方法：`firstKey()`, `lastKey()`, `lowerKey(K key)`, `higherKey(K key)` 等。
+
+```java
+TreeMap<Integer, String> treeMap = new TreeMap<>();
+treeMap.put(3, "C");
+treeMap.put(1, "A");
+treeMap.put(2, "B");
+// 按键排序：1=A, 2=B, 3=C
+Integer first = treeMap.firstKey();   // 1
+Integer last = treeMap.lastKey();     // 3
+Map.Entry<Integer, String> lower = treeMap.lowerEntry(2);  // 1=A
+```
+
+### 6.5 Collections 工具类
+
+```java
+List<Integer> list = new ArrayList<>(Arrays.asList(3, 1, 2));
+
+// 排序
+Collections.sort(list);                    // 升序：[1, 2, 3]
+Collections.sort(list, (a, b) -> b - a);   // 降序：[3, 2, 1]
+Collections.reverse(list);                 // 反转
+
+// 查找
+int max = Collections.max(list);           // 最大值
+int min = Collections.min(list);           // 最小值
+int index = Collections.binarySearch(list, 2);  // 二分查找（需先排序）
+
+// 打乱
+Collections.shuffle(list);                 // 随机打乱
+
+// 不可变集合
+List<Integer> unmodifiable = Collections.unmodifiableList(list);
+// unmodifiable.add(4);  // 抛出 UnsupportedOperationException
+
+// 同步集合（线程安全，但性能较低，推荐使用并发包中的类）
+List<Integer> synchronizedList = Collections.synchronizedList(list);
+```
+
+---
+
+## 第七章 泛型（Generics）—— 类型安全的利器
+
+### 7.1 泛型基础
+
+泛型允许在定义类、接口、方法时使用类型参数，在编译时进行类型检查，避免运行时 `ClassCastException`。
+
+```java
+// 泛型类
+public class Box<T> {
+    private T content;
+
+    public void set(T content) { this.content = content; }
+    public T get() { return content; }
+}
+
+// 使用
+Box<String> stringBox = new Box<>();
+stringBox.set("Hello");
+String s = stringBox.get();  // 无需强制转换
+
+Box<Integer> intBox = new Box<>();
+intBox.set(100);
+int i = intBox.get();
+```
+
+### 7.2 泛型通配符
+
+- **上界通配符 `<? extends T>`**：接收 T 或 T 的子类，只能读取，不能写入（除了 `null`）。
+- **下界通配符 `<? super T>`**：接收 T 或 T 的父类，可以写入 T 或 T 的子类，读取时只能当作 `Object`。
+
+```java
+// 上界通配符：适合读取
+public static double sum(List<? extends Number> list) {
+    double total = 0;
+    for (Number num : list) {
+        total += num.doubleValue();  // 可以读取
+    }
+    // list.add(10);  // 编译错误，不能写入
+    return total;
+}
+
+// 下界通配符：适合写入
+public static void addNumbers(List<? super Integer> list) {
+    list.add(10);   // 可以写入 Integer
+    list.add(20);
+    // Integer i = list.get(0);  // 编译错误，只能当作 Object
+}
+
+// 使用
+List<Integer> integers = Arrays.asList(1, 2, 3);
+List<Double> doubles = Arrays.asList(1.5, 2.5, 3.5);
+System.out.println(sum(integers));   // 6.0
+System.out.println(sum(doubles));    // 7.5
+
+List<Number> numbers = new ArrayList<>();
+addNumbers(numbers);
+```
+
+### 7.3 类型擦除
+
+Java 泛型在编译时进行类型检查，运行时类型信息被擦除（Type Erasure）。
+
+```java
+List<String> strings = new ArrayList<>();
+List<Integer> integers = new ArrayList<>();
+System.out.println(strings.getClass() == integers.getClass());  // true，都是 ArrayList.class
+```
+
+- 泛型类型参数在运行时被擦除为上界（无上界则为 `Object`）。
+- 因此不能使用 `new T[]`、`new T()`、`T.class` 等操作。
+
+---
+
+## 第八章 Lambda 表达式与函数式接口（JDK 8+）
+
+### 8.1 Lambda 表达式语法
+
+Lambda 表达式是匿名函数的简洁表示，用于实现函数式接口（只有一个抽象方法的接口）。
+
+```java
+// 语法：(参数列表) -> { 方法体 }
+// 无参无返回值
+Runnable r1 = () -> System.out.println("Hello");
+Runnable r2 = () -> {
+    System.out.println("Hello");
+    System.out.println("World");
+};
+
+// 有参有返回值
+Comparator<Integer> c1 = (a, b) -> a - b;
+Comparator<Integer> c2 = (Integer a, Integer b) -> {
+    return a.compareTo(b);
+};
+
+// 单参数可省略括号
+Consumer<String> consumer = s -> System.out.println(s);
+```
+
+### 8.2 常用函数式接口
+
+| 接口 | 方法签名 | 说明 | 示例 |
+|:---|:---|:---|:---|
+| `Runnable` | `void run()` | 无参无返回值 | `() -> System.out.println("run")` |
+| `Supplier<T>` | `T get()` | 无参有返回值（生产者） | `() -> Math.random()` |
+| `Consumer<T>` | `void accept(T t)` | 有参无返回值（消费者） | `s -> System.out.println(s)` |
+| `Function<T, R>` | `R apply(T t)` | 有参有返回值（函数） | `s -> s.length()` |
+| `Predicate<T>` | `boolean test(T t)` | 有参返回布尔值（断言） | `s -> s.isEmpty()` |
+| `BiFunction<T, U, R>` | `R apply(T t, U u)` | 双参数函数 | `(a, b) -> a + b` |
+| `BinaryOperator<T>` | `T apply(T t1, T t2)` | 双参数同类型函数 | `(a, b) -> a * b` |
+
+### 8.3 方法引用
+
+方法引用是 Lambda 表达式的简写形式，当 Lambda 表达式仅调用一个已存在的方法时使用。
+
+```java
+// 静态方法引用：ClassName::staticMethod
+Function<String, Integer> parser = Integer::parseInt;
+// 等价于：s -> Integer.parseInt(s)
+
+// 实例方法引用：instance::instanceMethod
+String str = "Hello";
+Predicate<String> predicate = str::startsWith;
+// 等价于：s -> str.startsWith(s)
+
+// 特定类型的实例方法引用：ClassName::instanceMethod
+Function<String, Integer> lengthGetter = String::length;
+// 等价于：s -> s.length()
+
+// 构造方法引用：ClassName::new
+Supplier<List<String>> listSupplier = ArrayList::new;
+// 等价于：() -> new ArrayList<>()
+```
+
+---
+
+## 第九章 Stream API（JDK 8+）—— 函数式数据处理
+
+### 9.1 Stream 基础
+
+Stream 是数据管道，支持顺序或并行操作，不存储数据，不修改源数据。
+
+```java
+// 创建 Stream
+// 1. 集合的 stream() 方法
+List<String> list = Arrays.asList("A", "B", "C");
+Stream<String> stream1 = list.stream();
+
+// 2. 数组的 Arrays.stream()
+String[] arr = {"A", "B", "C"};
+Stream<String> stream2 = Arrays.stream(arr);
+
+// 3. Stream.of()
+Stream<String> stream3 = Stream.of("A", "B", "C");
+
+// 4. 无限流
+Stream<Double> randoms = Stream.generate(Math::random);  // 无限随机数流
+Stream<Integer> naturals = Stream.iterate(0, n -> n + 1);  // 0, 1, 2, 3, ...
+```
+
+### 9.2 中间操作（返回新 Stream）
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+// filter：过滤
+Stream<Integer> filtered = numbers.stream().filter(n -> n % 2 == 0);  // 2, 4, 6, 8, 10
+
+// map：映射
+Stream<Integer> mapped = numbers.stream().map(n -> n * n);  // 1, 4, 9, 16, 25, ...
+
+// flatMap：扁平化映射
+List<List<Integer>> nested = Arrays.asList(
+    Arrays.asList(1, 2),
+    Arrays.asList(3, 4)
+);
+Stream<Integer> flattened = nested.stream().flatMap(List::stream);  // 1, 2, 3, 4
+
+// distinct：去重
+Stream<Integer> distincted = Stream.of(1, 2, 2, 3, 3, 3).distinct();  // 1, 2, 3
+
+// sorted：排序
+Stream<Integer> sorted = numbers.stream().sorted((a, b) -> b - a);  // 降序
+
+// limit & skip：截取与跳过
+Stream<Integer> limited = numbers.stream().limit(5);   // 前 5 个
+Stream<Integer> skipped = numbers.stream().skip(5);    // 跳过前 5 个
+
+// peek：调试（查看每个元素但不修改）
+numbers.stream()
+    .peek(n -> System.out.println("Processing: " + n))
+    .filter(n -> n > 5)
+    .forEach(System.out::println);
+```
+
+### 9.3 终止操作（产生结果）
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+// forEach：遍历
+numbers.stream().forEach(System.out::println);
+
+// collect：收集到集合
+List<Integer> list = numbers.stream().filter(n -> n > 2).collect(Collectors.toList());
+Set<Integer> set = numbers.stream().collect(Collectors.toSet());
+Map<Integer, String> map = numbers.stream().collect(Collectors.toMap(n -> n, n -> "Num" + n));
+
+// reduce：归约
+int sum = numbers.stream().reduce(0, (a, b) -> a + b);  // 求和：15
+int product = numbers.stream().reduce(1, (a, b) -> a * b);  // 求积：120
+Optional<Integer> max = numbers.stream().reduce(Integer::max);  // 最大值
+
+// 统计
+long count = numbers.stream().count();  // 元素个数
+int sum2 = numbers.stream().mapToInt(Integer::intValue).sum();  // 求和
+double avg = numbers.stream().mapToInt(Integer::intValue).average().orElse(0);  // 平均值
+IntSummaryStatistics stats = numbers.stream().mapToInt(Integer::intValue).summaryStatistics();
+System.out.println(stats.getMax());   // 5
+System.out.println(stats.getMin());   // 1
+System.out.println(stats.getSum());   // 15
+System.out.println(stats.getAverage());  // 3.0
+
+// 匹配
+boolean anyMatch = numbers.stream().anyMatch(n -> n > 3);   // 是否存在 > 3 的元素
+boolean allMatch = numbers.stream().allMatch(n -> n > 0);   // 是否所有元素 > 0
+boolean noneMatch = numbers.stream().noneMatch(n -> n < 0); // 是否没有元素 < 0
+
+// 查找
+Optional<Integer> first = numbers.stream().findFirst();  // 第一个元素
+Optional<Integer> any = numbers.stream().findAny();      // 任意一个元素（并行流中高效）
+```
+
+### 9.4 并行流
+
+```java
+// 顺序流转并行流
+Stream<Integer> parallel = numbers.stream().parallel();
+
+// 直接创建并行流
+Stream<Integer> parallel2 = numbers.parallelStream();
+
+// 并行流注意事项：
+// 1. 线程安全：避免共享可变状态
+// 2. 顺序：forEach 不保证顺序，forEachOrdered 保证顺序
+// 3. 性能：数据量大时才有优势，小数据量可能更慢
+```
+
+---
+
+## 第十章 IO 与 NIO（输入输出）
+
+### 10.1 传统 IO（BIO）
+
+**字节流**（处理二进制数据）：
+- `InputStream` / `OutputStream`（抽象基类）
+- `FileInputStream` / `FileOutputStream`（文件）
+- `BufferedInputStream` / `BufferedOutputStream`（缓冲）
+- `DataInputStream` / `DataOutputStream`（基本类型）
+
+**字符流**（处理文本数据）：
+- `Reader` / `Writer`（抽象基类）
+- `FileReader` / `FileWriter`（文件）
+- `BufferedReader` / `BufferedWriter`（缓冲，提供 `readLine()`）
+- `InputStreamReader` / `OutputStreamWriter`（字节流转字符流，指定编码）
+
+```java
+// 文件复制（字节流 + 缓冲）
+try (FileInputStream fis = new FileInputStream("source.txt");
+     FileOutputStream fos = new FileOutputStream("target.txt");
+     BufferedInputStream bis = new BufferedInputStream(fis);
+     BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+    byte[] buffer = new byte[1024];
+    int len;
+    while ((len = bis.read(buffer)) != -1) {
+        bos.write(buffer, 0, len);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// 读取文本文件（字符流 + 缓冲）
+try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) {
+    String line;
+    while ((line = br.readLine()) != null) {
+        System.out.println(line);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// 写入文本文件
+try (BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"))) {
+    bw.write("Hello World");
+    bw.newLine();  // 换行
+    bw.write("Java IO");
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+### 10.2 NIO（New IO，JDK 4+）
+
+NIO 采用通道（Channel）和缓冲区（Buffer）模型，支持非阻塞 IO。
+
+**Buffer**：
+- `ByteBuffer`, `CharBuffer`, `IntBuffer`, `LongBuffer` 等。
+- 核心属性：`capacity`（容量）、`position`（当前位置）、`limit`（限制）。
+
+```java
+ByteBuffer buffer = ByteBuffer.allocate(1024);  // 分配堆缓冲区
+ByteBuffer directBuffer = ByteBuffer.allocateDirect(1024);  // 直接缓冲区（堆外内存）
+
+buffer.put((byte) 10);
+buffer.put((byte) 20);
+buffer.flip();  // 切换为读模式（position=0, limit=旧position）
+byte b1 = buffer.get();
+byte b2 = buffer.get();
+buffer.clear();  // 清空（position=0, limit=capacity）
+```
+
+**Channel**：
+- `FileChannel`, `SocketChannel`, `ServerSocketChannel`, `DatagramChannel`。
+
+```java
+// 文件复制（NIO）
+try (FileChannel inChannel = new FileInputStream("source.txt").getChannel();
+     FileChannel outChannel = new FileOutputStream("target.txt").getChannel()) {
+    ByteBuffer buffer = ByteBuffer.allocate(1024);
+    while (inChannel.read(buffer) != -1) {
+        buffer.flip();
+        outChannel.write(buffer);
+        buffer.clear();
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// transferTo / transferFrom（零拷贝，高效）
+try (FileChannel inChannel = new FileInputStream("source.txt").getChannel();
+     FileChannel outChannel = new FileOutputStream("target.txt").getChannel()) {
+    inChannel.transferTo(0, inChannel.size(), outChannel);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+### 10.3 NIO.2（JDK 7+）
+
+**Path 和 Files**：
+
+```java
+import java.nio.file.*;
+
+// Path
+Path path = Paths.get("dir", "subdir", "file.txt");  // 构建路径
+Path absolute = path.toAbsolutePath();  // 转为绝对路径
+Path normalized = path.normalize();     // 规范化（去除冗余的 . 和 ..）
+
+// Files
+boolean exists = Files.exists(path);
+boolean isDirectory = Files.isDirectory(path);
+long size = Files.size(path);
+
+// 创建文件和目录
+Files.createDirectories(Paths.get("dir/subdir"));
+Files.createFile(Paths.get("dir/file.txt"));
+
+// 复制、移动、删除
+Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+Files.delete(path);
+Files.deleteIfExists(path);
+
+// 读取所有行（小文件）
+List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+String content = Files.readString(path);  // JDK 11+
+
+// 写入
+Files.write(path, lines, StandardCharsets.UTF_8);
+Files.writeString(path, "Hello World", StandardCharsets.UTF_8);  // JDK 11+
+
+// 遍历目录
+try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dir"))) {
+    for (Path p : stream) {
+        System.out.println(p.getFileName());
+    }
+}
+
+// 递归遍历（深度优先）
+Files.walk(Paths.get("dir")).forEach(System.out::println);
+
+// 查找文件
+Path found = Files.find(Paths.get("dir"), Integer.MAX_VALUE,
+    (p, attr) -> p.getFileName().toString().endsWith(".txt"))
+    .findFirst()
+    .orElse(null);
+```
+
+---
+
+## 第十一章 多线程基础
+
+### 11.1 线程创建方式
+
+```java
+// 1. 继承 Thread 类
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println("Thread running: " + Thread.currentThread().getName());
+    }
+}
+MyThread t1 = new MyThread();
+t1.start();
+
+// 2. 实现 Runnable 接口（推荐，避免单继承限制）
+class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        System.out.println("Runnable running");
+    }
+}
+Thread t2 = new Thread(new MyRunnable());
+t2.start();
+
+// 3. Lambda 表达式（JDK 8+）
+Thread t3 = new Thread(() -> System.out.println("Lambda thread"));
+t3.start();
+
+// 4. 实现 Callable 接口（有返回值，JDK 5+）
+class MyCallable implements Callable<Integer> {
+    @Override
+    public Integer call() throws Exception {
+        Thread.sleep(1000);
+        return 42;
+    }
+}
+ExecutorService executor = Executors.newSingleThreadExecutor();
+Future<Integer> future = executor.submit(new MyCallable());
+Integer result = future.get();  // 阻塞等待结果
+executor.shutdown();
+```
+
+### 11.2 线程生命周期
+
+```
+新建 (New)
+  ↓ start()
+可运行 (Runnable) ←───────────┐
+  ↓ 获取 CPU 时间片            │
+运行中 (Running)               │
+  ↓ yield() / 时间片用完       │
+  └───────────────────────────┘
+  ↓ wait() / sleep() / join()
+阻塞 / 等待 (Blocked / Waiting)
+  ↓ notify() / notifyAll() / 超时
+可运行 (Runnable)
+  ↓ run() 结束
+终止 (Terminated)
+```
+
+### 11.3 线程同步
+
+**synchronized 关键字**：
+- 同步方法：`public synchronized void method() { ... }`
+- 同步代码块：`synchronized (obj) { ... }`
+- 锁对象：实例方法锁 `this`，静态方法锁 `Class` 对象。
+
+```java
+class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public void decrement() {
+        synchronized (this) {
+            count--;
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+**ReentrantLock（JDK 5+）**：
+- 更灵活，支持公平锁、可中断、尝试获取锁。
+
+```java
+import java.util.concurrent.locks.ReentrantLock;
+
+class CounterWithLock {
+    private int count = 0;
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public void increment() {
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock();  // 必须在 finally 中释放锁
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+### 11.4 线程通信
+
+**wait / notify / notifyAll**：
+- 必须在 `synchronized` 块内调用，锁对象与调用对象一致。
+- `wait()`：释放锁并等待，直到被唤醒或中断。
+- `notify()`：唤醒一个等待线程。
+- `notifyAll()`：唤醒所有等待线程。
+
+```java
+class ProducerConsumer {
+    private final Queue<Integer> queue = new LinkedList<>();
+    private final int capacity = 5;
+
+    public synchronized void produce(int item) throws InterruptedException {
+        while (queue.size() == capacity) {
+            wait();  // 队列满，等待
+        }
+        queue.offer(item);
+        System.out.println("Produced: " + item);
+        notifyAll();  // 唤醒消费者
+    }
+
+    public synchronized int consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait();  // 队列空，等待
+        }
+        int item = queue.poll();
+        System.out.println("Consumed: " + item);
+        notifyAll();  // 唤醒生产者
+        return item;
+    }
+}
+```
+
+---
+
+## 第十二章 Java 8-17 新特性速览
+
+### 12.1 Java 8（LTS）
+
+- Lambda 表达式
+- Stream API
+- 函数式接口
+- 默认方法（接口中可以有实现）
+- `Optional` 类（避免 `NullPointerException`）
+- 新的日期时间 API（`java.time`）
+- 方法引用
+- 重复注解
+
+### 12.2 Java 9
+
+- 模块化系统（JPMS）
+- `jshell`（交互式编程工具）
+- 接口私有方法
+- 改进的 `try-with-resources`（变量可以在外部声明）
+- `List.of()`, `Set.of()`, `Map.of()`（不可变集合工厂方法）
+
+```java
+List<String> list = List.of("A", "B", "C");  // 不可变
+Set<Integer> set = Set.of(1, 2, 3);
+Map<String, Integer> map = Map.of("A", 1, "B", 2);
+```
+
+### 12.3 Java 10
+
+- 局部变量类型推断（`var`）
+
+```java
+var list = new ArrayList<String>();  // 推断为 ArrayList<String>
+var stream = list.stream();          // 推断为 Stream<String>
+```
+
+### 12.4 Java 11（LTS）
+
+- 字符串新方法：`isBlank()`, `strip()`, `lines()`, `repeat(int)`
+- `Files.readString()`, `Files.writeString()`
+- `Collection.toArray(IntFunction)`
+- 标准化 HTTP Client API
+
+```java
+String text = "  Hello  ";
+System.out.println(text.isBlank());   // false
+System.out.println(text.strip());     // "Hello"
+System.out.println("A\nB\nC".lines().count());  // 3
+System.out.println("Hi".repeat(3));   // "HiHiHi"
+```
+
+### 12.5 Java 14
+
+- `switch` 表达式（正式版）
+- `Records`（预览）：简洁的数据载体类
+
+```java
+// switch 表达式
+int num = 2;
+String result = switch (num) {
+    case 1 -> "one";
+    case 2 -> "two";
+    default -> "unknown";
+};
+
+// Record（JDK 16 正式版）
+record Point(int x, int y) { }
+Point p = new Point(10, 20);
+System.out.println(p.x());  // 10
+System.out.println(p.y());  // 20
+```
+
+### 12.6 Java 15
+
+- 文本块（Text Blocks，预览）
+
+```java
+String json = """
+    {
+        "name": "Alice",
+        "age": 30
+    }
+    """;
+```
+
+### 12.7 Java 16
+
+- `Record` 正式版
+- `Stream.toList()`（直接转为 List）
+
+```java
+List<Integer> list = Stream.of(1, 2, 3).toList();  // 不可变 List
+```
+
+### 12.8 Java 17（LTS）
+
+- 密封类（Sealed Classes，预览）：限制继承层次
+- 增强的伪随机数生成器
+
+```java
+// Sealed Class（JDK 17 预览，JDK 21 正式）
+sealed interface Shape permits Circle, Rectangle { }
+final class Circle implements Shape { }
+final class Rectangle implements Shape { }
+```
+
+---
+
+> **扩展建议**：新增章节涵盖了集合框架、泛型、Lambda、Stream、IO/NIO、多线程及 Java 8-17 新特性，建议结合实际项目练习。重点掌握集合选择（ArrayList vs LinkedList vs HashMap）、Stream 流式操作、线程同步机制，以及新特性的实际应用场景。

@@ -263,13 +263,12 @@ if __name__ == &quot;__main__&quot;:
 
 下面是一个简单的游玩试验
 
-<img loading="lazy" src="pics/test.png" srcset="/posts/e-card/pics/test.png, pics/test.png 1.5x, /posts/e-card/pics/test.png 2x" sizes="auto" data-title="/posts/e-card/pics/test.png" data-alt="/posts/e-card/pics/test.png" width="570" height="924" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![test.png](/images/e-card/test.png)
 
 其次，如果用ai代替用户并开始实验
 
-i`mport gym`
-
 ```python
+import gym
 from gym import spaces
 
 import numpy as np
@@ -684,33 +683,33 @@ if __name__ == &quot;__main__&quot;:
 
 我设立了训练梯度，结果如下
 
-2048次
+**2048次训练结果：**
 
-<img loading="lazy" src="pics/2048.png" srcset="/posts/e-card/pics/2048.png, pics/2048.png 1.5x, /posts/e-card/pics/2048.png 2x" sizes="auto" data-title="2048.png" data-alt="2048.png" width="428" height="525" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![2048.png](/images/e-card/2048.png)
 
-4096次
+**4096次训练结果：**
 
-<img loading="lazy" src="pics/4096.png" srcset="/posts/e-card/pics/4096.png, pics/4096.png 1.5x, /posts/e-card/pics/4096.png 2x" sizes="auto" data-title="4096.png" data-alt="4096.png" width="270" height="286" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![4096.png](/images/e-card/4096.png)
 
-8192次
+**8192次训练结果：**
 
-<img loading="lazy" src="pics/8192.png" srcset="/posts/e-card/pics/8192.png, pics/8192.png 1.5x, /posts/e-card/pics/8192.png 2x" sizes="auto" data-title="8192.png" data-alt="8192.png" width="409" height="530" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![8192.png](/images/e-card/8192.png)
 
-16384次
+**16384次训练结果：**
 
-<img loading="lazy" src="pics/16384.png" srcset="/posts/e-card/pics/16384.png, pics/16384.png 1.5x, /posts/e-card/pics/16384.png 2x" sizes="auto" data-title="16384.png" data-alt="16384.png" width="411" height="531" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![16384.png](/images/e-card/16384.png)
 
-32768次
+**32768次训练结果：**
 
-<img loading="lazy" src="pics/32768.png" srcset="/posts/e-card/pics/32768.png, pics/32768.png 1.5x, /posts/e-card/pics/32768.png 2x" sizes="auto" data-title="32768.png" data-alt="32768.png" width="426" height="517" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![32768.png](/images/e-card/32768.png)
 
-65536次
+**65536次训练结果：**
 
-<img loading="lazy" src="pics/65536.png" srcset="/posts/e-card/pics/65536.png, pics/65536.png 1.5x, /posts/e-card/pics/65536.png 2x" sizes="auto" data-title="65536.png" data-alt="65536.png" width="447" height="532" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![65536.png](/images/e-card/65536.png)
 
-155648次
+**155648次训练结果：**
 
-<img loading="lazy" src="pics/155648.png" srcset="/posts/e-card/pics/155648.png, pics/155648.png 1.5x, /posts/e-card/pics/155648.png 2x" sizes="auto" data-title="155648.png" data-alt="155648.png" width="445" height="535" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/>
+![155648.png](/images/e-card/155648.png)
 
 幸运的是AI作为皇帝的获胜次数明显高于电脑作为皇帝的获胜次数，甚至高于平局次数，这可能表明模型在AI作为皇帝时的策略比较有效。然而，AI作为奴隶的获胜次数远低于电脑作为奴隶的获胜次数，这可能表明模型在AI作为奴隶时的策略效果不佳。
 
