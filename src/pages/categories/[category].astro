@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+  const cats = new Set<string>();
+  for (const post of allPosts) {
+    for (const cat of post.data.categories) cats.add(cat);
+  }
+  return [...cats].map((cat) => ({
+    params: { category: cat.toLowerCase() },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.categories.includes(category)))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title={`${category} | Corthyn's Blog`}>
+  <h2 class="archive-title">Category: {category}</h2>
+
+  <div class="each-category" style="padding: 0 20vw;">
+    {allPosts.map((post) => (
+      <article class="archive-item">
+        <a href={`/post/${post.id}`} class="archive-item-link hover-underline-animation">{post.data.title}</a>
+        <span class="archive-item-date">
+          {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </span>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

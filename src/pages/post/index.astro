@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const years = new Map<number, typeof allPosts>();
+for (const post of allPosts) {
+  const year = post.data.date.getFullYear();
+  if (!years.has(year)) years.set(year, []);
+  years.get(year)!.push(post);
+}
+const sortedYears = [...years.keys()].sort((a, b) => b - a);
+---
+
+<BaseLayout title="Blog | Corthyn's Blog">
+  <div class="container">
+    <h1>Archives</h1>
+  </div>
+
+  <div class="archive-container">
+    <div class="archive">
+      {sortedYears.map((year) => (
+        <>
+          <h2 class="archive-title">{year}</h2>
+          {years.get(year)!.map((post) => (
+            <article class="archive-item">
+              <a href={`/post/${post.id}`} class="archive-item-link hover-underline-animation">{post.data.title}</a>
+              <span class="archive-item-date">
+                {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+            </article>
+          ))}
+        </>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

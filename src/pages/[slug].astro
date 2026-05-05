@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => !data.draft);
+  return pages.map((page) => ({
+    params: { slug: page.id },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<BaseLayout title={`${page.data.title} | Corthyn's Blog`}>
+  <div class="single-container">
+    <div class="archive">
+      <h1 class="title is-1">{page.data.title}</h1>
+      <div class="content about-content">
+        <Content />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Corthyn's Blog">
+  <div id="home-box">
+    <div class="avatar-container">
+      <img src="/images/0010.png" class="author-avatar" alt="avatar" />
+    </div>
+    <h1 id="home-title">Corthyn's Blog</h1>
+    <div class="typewriter-effect">
+      <div class="text" id="typewriter-text">I'm Corthyn, nice to meet you(ˊ˘ˋ*)♡</div>
+    </div>
+    <script is:inline>
+      const tw = document.getElementById('typewriter-text');
+      tw.style.setProperty('--characters', tw.innerHTML.length);
+    </script>
+    <div class="social-icon">
+      <a href="https://github.com/elegymythos" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.8 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.18 3.3 6.68 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      </a>
+    </div>
+    <div class="site-stats">
+      <span id="vercount_value_site_pv">Loading</span> total views &nbsp;|&nbsp;
+      <span id="vercount_value_site_uv">Loading</span> visitors
+    </div>
+  </div>
+
+  <div class="summary">
+    {allPosts.map((post) => (
+      <article class="post">
+        <div class="single-container">
+          <div id="post-container">
+            <h1 class="post-title hover-underline-animation">
+              <a class="post-link" href={`/post/${post.id}`}>{post.data.title}</a>
+            </h1>
+            <div class="post-time-container">
+              <span>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              {post.data.categories.length > 0 && (
+                <span>&nbsp;|&nbsp;{post.data.categories.join(', ')}</span>
+              )}
+              <span class="post-views">&nbsp;|&nbsp;<span id="vercount_value_page_pv">Loading</span> views</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

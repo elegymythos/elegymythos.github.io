@@ -1,4 +1,4 @@
-.hugo_build.lock
-/resources/_gen/
+node_modules/
+dist/
 .arts/
 .codeartsdoer/
