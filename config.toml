@@ -6,11 +6,11 @@ title = "Corthyn's Blog"
 [params]
 author = "Corthyn"
 description = "My site description"
-authorImage = "/images/profile.jpg"
+authorImage = "/images/0010.png"
 paginate = 5 
 Title = "Corthyn's Blog"
 content = "I'm Corthyn, nice to meet you(ˊ˘ˋ*)♡"
-imageUrl = "/images/avatar.jpg"
+imageUrl = "/images/0010.png"
 
 # To add a new social icon 
 # More social icons can be found in JuiceBar\layouts\partials\svg.html.
