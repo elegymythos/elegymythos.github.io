@@ -30,12 +30,19 @@ body {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--main-black);
-  background-color: white;
+  background-color: #f0fdf4;
+  background-image: 
+    radial-gradient(ellipse at 20% 50%, rgba(74, 222, 128, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(134, 239, 172, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(22, 163, 74, 0.04) 0%, transparent 40%);
 }
 
 body.dark-mode {
   color: var(--dark-font);
   background-color: var(--dark-background);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(74, 222, 128, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(22, 163, 74, 0.03) 0%, transparent 50%);
 }
 
 main { flex: 1; }
