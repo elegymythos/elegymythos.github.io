@@ -19,7 +19,7 @@ const currentIndex = allPosts.findIndex((p) => p.id === post.id);
 const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
-const walineServerURL = 'https://waline-api-one.vercel.app';
+const walineServerURL = 'https://waline-elegymythos.vercel.app';
 const pagePath = `/post/${post.id}`;
 ---
 
@@ -35,7 +35,7 @@ const pagePath = `/post/${post.id}`;
           <p>Corthyn</p>
           <p>
             <time>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-            <span class="vercount-page-view">&nbsp;|&nbsp;<span id="waline-pageview-count">Loading</span> views</span>
+            <span class="vercount-page-view">&nbsp;|&nbsp;<span id="vercount_value_page_pv">-</span> views</span>
           </p>
         </div>
         <div class="small-categories-container">
@@ -74,8 +74,10 @@ const pagePath = `/post/${post.id}`;
         el: '#waline-comment',
         serverURL: walineServerURL,
         path: pagePath,
-        pageview: true,
+        pageview: false,
       });
+    }).catch(() => {
+      document.getElementById('waline-comment').innerHTML = '<p style="color:#999;text-align:center;">Comment system is loading...</p>';
     });
   </script>
 </BaseLayout>
