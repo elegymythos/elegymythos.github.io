@@ -17,6 +17,9 @@ const { title, description = "Corthyn's Blog" } = Astro.props;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={Astro.url.href} />
+    <link rel="icon" type="image/png" href="/images/0010.png" />
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+    <script defer src="https://analytics.umami.is/script.js" data-website-id="YOUR_UMAMI_WEBSITE_ID"></script>
   </head>
   <body>
     <nav class="navbar">
@@ -42,12 +45,12 @@ const { title, description = "Corthyn's Blog" } = Astro.props;
         &nbsp;|&nbsp; Powered by <a href="https://astro.build/" target="_blank">Astro</a>
       </div>
       <div class="footer-stats">
-        <span id="vercount_value_site_pv">Loading</span> total views &nbsp;|&nbsp;
-        <span id="vercount_value_site_uv">Loading</span> visitors
+        <span id="waline-pageview-count">Loading</span> views &nbsp;|&nbsp;
+        <span id="umami-site-pv">Loading</span> total &nbsp;|&nbsp;
+        <span id="umami-site-uv">Loading</span> visitors
       </div>
     </footer>
 
-    <script defer src="https://events.vercount.one/js"></script>
     <script is:inline>
       function setTheme(theme) {
         if (theme === "dark") {
@@ -69,6 +72,37 @@ const { title, description = "Corthyn's Blog" } = Astro.props;
       document.getElementById("navbar-burger").addEventListener("click", () => {
         document.getElementById("navbar-links").classList.toggle("active");
       });
+    </script>
+
+    <script is:inline>
+      const WALINE_SERVER = 'https://waline-api-one.vercel.app';
+      const currentPath = window.location.pathname;
+      fetch(`${WALINE_SERVER}/api/article?path=${encodeURIComponent(currentPath)}`)
+        .then(r => r.json())
+        .then(d => {
+          const el = document.getElementById('waline-pageview-count');
+          if (el) el.textContent = d.data?.time || d.data || '?';
+        })
+        .catch(() => {
+          const el = document.getElementById('waline-pageview-count');
+          if (el) el.textContent = '?';
+        });
+
+      const UMAMI_API = 'https://analytics.umami.is/api/websites/YOUR_UMAMI_WEBSITE_ID/stats';
+      fetch(UMAMI_API, { headers: { 'x-umami-token': '' } })
+        .then(r => r.json())
+        .then(d => {
+          const pvEl = document.getElementById('umami-site-pv');
+          const uvEl = document.getElementById('umami-site-uv');
+          if (pvEl) pvEl.textContent = d.pageviews?.value ?? '?';
+          if (uvEl) uvEl.textContent = d.visitors?.value ?? '?';
+        })
+        .catch(() => {
+          const pvEl = document.getElementById('umami-site-pv');
+          const uvEl = document.getElementById('umami-site-uv');
+          if (pvEl) pvEl.textContent = '?';
+          if (uvEl) uvEl.textContent = '?';
+        });
     </script>
   </body>
 </html>

@@ -9,7 +9,9 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
 <BaseLayout title="Corthyn's Blog">
   <div id="home-box">
     <div class="avatar-container">
-      <img src="/images/0010.png" class="author-avatar" alt="avatar" />
+      <a href="/" class="avatar-link" title="Home">
+        <img src="/images/0010.png" class="author-avatar" alt="avatar" />
+      </a>
     </div>
     <h1 id="home-title">Corthyn's Blog</h1>
     <div class="typewriter-effect">
@@ -25,8 +27,13 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
       </a>
     </div>
     <div class="site-stats">
-      <span id="vercount_value_site_pv">Loading</span> total views &nbsp;|&nbsp;
-      <span id="vercount_value_site_uv">Loading</span> visitors
+      <span id="waline-pageview-count">Loading</span> views &nbsp;|&nbsp;
+      <span id="umami-site-pv">Loading</span> total &nbsp;|&nbsp;
+      <span id="umami-site-uv">Loading</span> visitors
+    </div>
+    <div class="fans-count">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span class="fans-num" id="substats-fans">Loading</span> fans
     </div>
   </div>
 
@@ -43,11 +50,21 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
               {post.data.categories.length > 0 && (
                 <span>&nbsp;|&nbsp;{post.data.categories.join(', ')}</span>
               )}
-              <span class="post-views">&nbsp;|&nbsp;<span id="vercount_value_page_pv">Loading</span> views</span>
             </div>
           </div>
         </div>
       </article>
     ))}
   </div>
+
+  <div class="home-quote">
+    There is only one heroism in the world: to see the world as it is and to love it.
+  </div>
+
+  <script is:inline>
+    fetch('https://substats-api.vercel.app/substats?source=github&queryKey=elegymythos')
+      .then(r => r.json())
+      .then(d => { document.getElementById('substats-fans').textContent = d.data.subs ?? '?'; })
+      .catch(() => { document.getElementById('substats-fans').textContent = '?'; });
+  </script>
 </BaseLayout>

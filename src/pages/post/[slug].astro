@@ -18,6 +18,9 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
 const currentIndex = allPosts.findIndex((p) => p.id === post.id);
 const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
+const walineServerURL = 'https://waline-api-one.vercel.app';
+const pagePath = `/post/${post.id}`;
 ---
 
 <BaseLayout title={`${post.data.title} | Corthyn's Blog`}>
@@ -25,12 +28,14 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
     <div class="archive">
       <h1 class="title is-1">{post.data.title}</h1>
       <div class="author-info">
-        <img src="/images/0010.png" class="author-image" alt="author" />
+        <a href="/" class="avatar-link" title="Home">
+          <img src="/images/0010.png" class="author-image" alt="author" />
+        </a>
         <div>
           <p>Corthyn</p>
           <p>
             <time>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-            <span class="vercount-page-view">&nbsp;|&nbsp;<span id="vercount_value_page_pv">Loading</span> views</span>
+            <span class="vercount-page-view">&nbsp;|&nbsp;<span id="waline-pageview-count">Loading</span> views</span>
           </p>
         </div>
         <div class="small-categories-container">
@@ -44,10 +49,12 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
       </div>
     </div>
 
+    <div class="waline-comment" id="waline-comment"></div>
+
     <button id="scrollToTopButton" onclick="window.scrollTo({top:0,behavior:'smooth'})">
       <svg viewBox="0 0 1024 1024" width="48" height="48">
-        <path d="M518.5 360.3c-3.2-4.4-9.7-4.4-12.9 0l-178 246c-3.8 5.3 0 12.7 6.5 12.7H381c10.2 0 19.9-4.9 25.9-13.2L512 460.4l105.2 145.4c6 8.3 15.6 13.2 25.9 13.2H690c6.5 0 10.3-7.4 6.5-12.7l-178-246z" fill="#363636"/>
-        <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="#363636"/>
+        <path d="M518.5 360.3c-3.2-4.4-9.7-4.4-12.9 0l-178 246c-3.8 5.3 0 12.7 6.5 12.7H381c10.2 0 19.9-4.9 25.9-13.2L512 460.4l105.2 145.4c6 8.3 15.6 13.2 25.9 13.2H690c6.5 0 10.3-7.4 6.5-12.7l-178-246z" fill="currentColor"/>
+        <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z" fill="currentColor"/>
       </svg>
     </button>
 
@@ -60,4 +67,15 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
       </div>
     </div>
   </div>
+
+  <script is:inline define:vars={{ walineServerURL, pagePath }}>
+    import('@waline/client').then(({ init }) => {
+      init({
+        el: '#waline-comment',
+        serverURL: walineServerURL,
+        path: pagePath,
+        pageview: true,
+      });
+    });
+  </script>
 </BaseLayout>
