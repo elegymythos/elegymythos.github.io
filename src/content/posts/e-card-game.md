@@ -1,8 +1,8 @@
 ---
 title: "E卡游戏 - 赌博默示录"
-date: 2024-12-15T15:52:23+08:00
+date: 2026-08-08T20:27:34+08:00
 draft: false
-tags: ["Game", "Probability", "Python"]
+tags: ["Game", "Probability", "Reinforcement Learning", "Python"]
 categories: ["Projects"]
 ---
 
@@ -16,710 +16,82 @@ E卡游戏，出自《赌博默示录》
 
 游戏规则如下：
 
-一局游戏最多四个回合，可能在第一个回合到第四个回合中任何一个回合结束游戏。
-
-每个回合，双方各自从自己的卡牌中挑选出一张放于桌前，同时摊开，摊开后根据牌面确定胜负。
-
-若为平民与平民，则为平局进入下一回合。
-
-若为皇帝与平民，则皇帝方胜利。
-
-若为平民与奴隶，则皇帝方胜。
-
-若为皇帝与奴隶，则为奴隶方胜。
+- 一局游戏最多五个回合，每回合双方各自从自己的卡牌中挑选出一张放于桌前，同时摊开，根据牌面确定胜负
+- 若为平民与平民，则为平局进入下一回合
+- 若为皇帝与平民，则皇帝方胜利
+- 若为平民与奴隶，则皇帝方胜
+- 若为皇帝与奴隶，则为奴隶方胜
+- 若王牌相遇则立即决出胜负（奴隶胜），否则继续下一轮，直至第 5 轮双方强制出王牌
 
 在一回合中分出胜负，则游戏即宣告结束。
 
-由于皇帝方与奴隶方的不公平，所以奴隶获胜的赔率更高
+由于皇帝方与奴隶方的不公平，所以奴隶获胜的赔率更高。
 
-首先在网上看到了这篇文章[[趣味分析]“E卡”游戏，出自《逆境无赖开司》（副名，《 - 游戏策划 - ?????? - Powered by Discuz!](https://bbs.gameres.com/thread_217944_1_1.html)
+首先在网上看到了这篇文章[[趣味分析]"E卡"游戏，出自《逆境无赖开司》](https://bbs.gameres.com/thread_217944_1_1.html)，旨在探究作为皇帝方与奴隶方的胜率。
 
-旨在探究作为皇帝方与奴隶方的胜率
+**强化学习实验**
 
-如果将奴隶方的赔率设为2
+其次，用强化学习对该博弈进行研究：使用 PPO（Proximal Policy Optimization）配合对手建模进行自博弈训练（2026-08-08 完成 6,000,000 回合完整训练，CPU 约 476 回合/秒）。
 
-在AI的帮助下，首先是完成了游戏命令行的简单实现，代码如下：
+方法要点：
 
-```python
-import random
+- 采用 Actor-Critic 架构，输出动作概率（随机策略），可学习混合策略
+- 使用 GAE（Generalized Advantage Estimation）计算优势函数，结合重要性采样裁剪与熵正则化
+- 状态空间为 17 维，包含双方在各轮次的历史出牌概率（对手建模），使智能体能够感知对手的策略风格
+- 非对称奖励（皇帝视角）：胜 +1、负 −5，模拟"赔率不同"的设定（奴隶胜收益为皇帝胜的 5 倍）；同一结果在奴隶视角为对称相反数
+- 自博弈双方 update 顺序随机交替，消除固定先后带来的系统不对称
 
-class CardGame:
+训练配置如下：
 
-    def __init__(self):
+| 参数 | 值 |
+| :--- | :--- |
+| 训练回合数 | 6,000,000 |
+| 学习率 | 1e-4 → 1e-5（余弦退火） |
+| 折扣因子 γ | 0.99 |
+| GAE λ | 0.95 |
+| PPO 裁剪 ε | 0.2 |
+| 熵正则权重 | 0.05 → 0.005（退火） |
+| 每次更新轮数 | 4 |
+| 每批样本数 | 32 |
+| 隐藏层维度 | 64 |
 
-        self.user_chips = 100  # 用户初始筹码
+**训练结果：**
 
-        self.computer_chips = 100  # 电脑初始筹码
+| 指标 | 值 | 参考（静态均衡近似） |
+| :--- | :---: | :---: |
+| 皇帝胜率 | 0.7972 | — |
+| 奴隶胜率 | 0.2028 | — |
+| 皇帝期望收益 | **−0.217** | +0.143 |
+| 皇帝首轮王牌率 p | 0.294 | 1/7 ≈ 0.1429 |
+| 奴隶首轮王牌率 q | 0.455 | 1/7 ≈ 0.1429 |
+| 平均结束回合（末 100 回合） | 2.94（长程中值约 1.7） | — |
+| 末段漂移（皇 / 奴） | −0.0003 / +0.0001 | 阈值 0.005 |
+| 收敛判定 | 皇帝收敛（稳定），奴隶收敛（稳定） | — |
 
-        self.roles = ['皇帝', '奴隶']
+**胜率曲线与平均结束回合：**
 
-        self.slave_odds = 2  # 奴隶角色的赔率系数
+![胜率曲线与平均结束回合](/images/e-card/ecard_win_rate_avg_rounds.png)
 
-    def display_chips(self):
+**首轮出王牌概率（含静态均衡线 1/7）：**
 
-        print(f&quot;\n用户筹码: {self.user_chips}, 电脑筹码: {self.computer_chips}&quot;)
+![首轮出王牌概率](/images/e-card/ecard_initial_ace_prob.png)
 
-    def select_role(self):
+**皇帝期望收益（含均衡线 +1/7 与零线）：**
 
-        choice = input(&quot;选择角色（1: 皇帝, 2:奴隶，3: 随机分配）: &quot;)
+![皇帝期望收益](/images/e-card/ecard_expected_reward.png)
 
-        if choice == '1':
+**收敛性面板（距均衡偏差 + 策略漂移率）：**
 
-            return '皇帝', '奴隶'
+![收敛性面板](/images/e-card/ecard_convergence.png)
 
-        elif choice == '2':
+损失、KL 散度、update 静默跳过等曲线在训练结束时自动导出，完整图表与指标数据见 `ecard-rl/` 目录。
 
-            return '奴隶', '皇帝'
+**核心发现**
 
-        elif choice == '3':
+1. **收敛性改善显著**：末段漂移由上一轮训练的（+0.024 / +0.009）降至（−0.0003 / +0.0001），余弦退火 + 熵终点 0.005 + update 顺序随机化使策略在训练末期真正稳定，双方均通过 0.005 漂移阈值判定为收敛。
+2. **收敛点偏离静态均衡**：p≈0.294、q≈0.456，皇帝期望 −0.217（均衡近似 +0.143）——"赢得多但期望负"的陷阱策略：皇帝胜率高达 0.797，但每次失败损失是胜利收益的 5 倍，长期期望为负。
+3. **深层轮次行为存在长时间尺度振荡**：首轮王牌率稳定，但平均结束回合在 1.2~3.7 间摆动（分段中值稳定约 1.7），显示自博弈策略在深层状态空间仍围绕吸引子循环。
 
-            # 随机选择一个角色
+总之，在 ±5 非对称奖励 + 第 5 轮强制王牌规则下，自博弈 PPO 学到的策略收敛于一个偏离静态均衡的稳定点：皇帝一方"赢得多但期望为负"。
 
-            random_role = random.choice(self.roles)
-
-            # 确定另一个角色
-
-            other_role = '皇帝' if random_role == '奴隶' else '奴隶'
-
-            return random_role, other_role
-
-        else:
-
-            print(&quot;无效选择，默认为随机分配角色。&quot;)
-
-            # 随机选择一个角色
-
-            random_role = random.choice(self.roles)
-
-            # 确定另一个角色
-
-            other_role = '皇帝' if random_role == '奴隶' else '奴隶'
-
-            return random_role, other_role
-
-    def betting(self):
-
-        user_bet = int(input(&quot;请输入您的押注金额: &quot;))
-
-        while user_bet &gt; self.user_chips:
-
-            user_bet = int(input(&quot;押注金额不能超出您的筹码，请重新输入: &quot;))
-
-        computer_bet = random.randint(1, self.computer_chips)  # 电脑随机押注
-
-        print(f&quot;电脑押注: {computer_bet}&quot;)
-
-        return user_bet, computer_bet
-
-    def play_round(self, user_card, computer_card):
-
-        print(f&quot;用户出牌: {user_card}, 电脑出牌: {computer_card}&quot;)
-
-        # 判断胜负
-
-        if user_card == computer_card:
-
-            print(&quot;本轮平局！&quot;)
-
-            return 'draw', None
-
-        elif (user_card == '皇帝' and computer_card == '平民') or \
-
-             (user_card == '平民' and computer_card == '奴隶') or \
-
-             (user_card == '奴隶' and computer_card == '皇帝'):
-
-            print(&quot;用户胜利！&quot;)
-
-            return 'user', 'slave' if user_card == '奴隶' else 'normal'
-
-        elif (computer_card == '皇帝' and user_card == '平民') or \
-
-             (computer_card == '平民' and user_card == '奴隶') or \
-
-            (computer_card == '奴隶' and user_card == '皇帝'):
-
-            print(&quot;电脑胜利！&quot;)
-
-            return 'computer', 'slave' if computer_card == '奴隶' else 'normal'
-
-        else:
-
-            print(&quot;电脑胜利！&quot;)
-
-            return 'computer', 'normal'
-
-    def start_game(self):
-
-        while self.user_chips &gt; 0 and self.computer_chips &gt; 0:
-
-            user_role, computer_role = self.select_role()  # 用户选择角色
-
-            # 初始化手牌
-
-            if user_role == '皇帝':
-
-                user_hand = ['平民', '平民', '平民', '平民', '皇帝']
-
-                computer_hand = ['平民', '平民', '平民', '平民', '奴隶']
-
-            else:
-
-                user_hand = ['平民', '平民', '平民', '平民', '奴隶']
-
-                computer_hand = ['平民', '平民', '平民', '平民', '皇帝']
-
-            print(f&quot;用户角色: {user_role}, 电脑角色: {computer_role}&quot;)
-
-            for round_num in range(4):
-
-                if not user_hand or not computer_hand:
-
-                    break  # 如果手牌用光，结束回合
-
-                self.display_chips()  # 显示筹码
-
-                 # 押注
-
-                user_bet, computer_bet = self.betting()
-
-                # 让用户选择出牌
-
-                print(&quot;\n用户手牌: &quot; + ', '.join(user_hand))
-
-                user_card = input(&quot;选择一张牌出牌（平民/皇帝/奴隶）: &quot;)
-
-                while user_card not in user_hand:
-
-                    user_card = input(&quot;无效选择，请选择一张手牌出牌: &quot;)
-
-                # 电脑随机出牌
-
-                computer_card = random.choice(computer_hand)
-
-                computer_hand.remove(computer_card)  # 移除电脑出牌
-
-                user_hand.remove(user_card)  # 移除用户出牌
-
-                winner, win_type = self.play_round(user_card, computer_card)  # 判定胜负
-
-                if winner != 'draw':  # 如果有胜者
-
-                    # 结算筹码
-
-                    if winner == 'user':
-
-                        if win_type == 'slave':
-
-                            self.user_chips += computer_bet * self.slave_odds
-
-                            self.computer_chips -= computer_bet * self.slave_odds
-
-                        else:
-
-                            self.user_chips += computer_bet
-
-                            self.computer_chips -= computer_bet
-
-                    else:
-
-                        if win_type == 'slave':
-
-                            self.computer_chips += user_bet * self.slave_odds
-
-                            self.user_chips -= user_bet * self.slave_odds
-
-                        else:
-
-                            self.computer_chips += user_bet
-
-                            self.user_chips -= user_bet
-
-            if self.user_chips &lt;= 0:
-
-                print(&quot;用户筹码用光，游戏结束！&quot;)
-
-            elif self.computer_chips &lt;= 0:
-
-                print(&quot;电脑筹码用光，用户胜利！&quot;)
-
-            next_game = input(&quot;是否继续下一局？(y/n): &quot;)
-
-            if next_game.lower() != 'y':
-
-                break
-
-        print(&quot;感谢您的参与！&quot;)
-
-# 启动游戏
-
-if __name__ == &quot;__main__&quot;:
-
-    game = CardGame()
-
-    game.start_game()
-
-```
-
-下面是一个简单的游玩试验
-
-![test.png](/images/e-card/test.png)
-
-其次，如果用ai代替用户并开始实验
-
-```python
-import gym
-from gym import spaces
-
-import numpy as np
-
-from stable_baselines3 import PPO
-
-import random
-
-import torch
-
-import pickle
-
-import os
-
-class CardGame:
-
-    def __init__(self):
-
-        self.user_chips = 100  # 用户初始筹码
-
-        self.computer_chips = 100  # 电脑初始筹码
-
-        self.roles = ['皇帝', '奴隶']
-
-        self.slave_odds = 2  # 奴隶角色的赔率系数
-
-    def display_chips(self):
-
-        print(f&quot;\n用户筹码: {self.user_chips}, 电脑筹码: {self.computer_chips}&quot;)
-
-    def select_role(self):
-
-        choice = random.choice(['1', '2', '3'])  # 自动随机选择角色，不再手动输入
-
-        if choice == '1':
-
-            return '皇帝', '奴隶'
-
-        elif choice == '2':
-
-            return '奴隶', '皇帝'
-
-        elif choice == '3':
-
-            # 随机选择一个角色
-
-            random_role = random.choice(self.roles)
-
-            # 确定另一个角色
-
-            other_role = '皇帝' if random_role == '奴隶' else '奴隶'
-
-            return random_role, other_role
-
-    def betting(self):
-
-        user_bet = random.randint(1, self.user_chips)  # 自动随机押注，不再手动输入
-
-        computer_bet = random.randint(1, self.computer_chips)  # 电脑随机押注
-
-        print(f&quot;用户押注: {user_bet}, 电脑押注: {computer_bet}&quot;)
-
-        return user_bet, computer_bet
-
-    def play_round(self, user_card, computer_card):
-
-        print(f&quot;用户出牌: {user_card}, 电脑出牌: {computer_card}&quot;)
-
-        # 判断胜负
-
-        if user_card == computer_card:
-
-            print(&quot;本轮平局！&quot;)
-
-            return 'draw', None
-
-        elif (user_card == '皇帝' and computer_card == '平民') or \
-
-             (user_card == '平民' and computer_card == '奴隶') or \
-
-             (user_card == '奴隶' and computer_card == '皇帝'):
-
-            print(&quot;用户胜利！&quot;)
-
-            return 'user', 'slave' if user_card == '奴隶' else 'normal'
-
-        elif (computer_card == '皇帝' and user_card == '平民') or \
-
-             (computer_card == '平民' and user_card == '奴隶') or \
-
-             (computer_card == '奴隶' and user_card == '皇帝'):
-
-            print(&quot;电脑胜利！&quot;)
-
-            return 'computer', 'slave' if computer_card == '奴隶' else 'normal'
-
-        else:
-
-            print(&quot;电脑胜利！&quot;)
-
-            return 'computer', 'normal'
-
-    def start_game(self):
-
-        while self.user_chips &gt; 0 and self.computer_chips &gt; 0:
-
-            user_role, computer_role = self.select_role()  # 用户选择角色
-
-            # 初始化手牌
-
-            if user_role == '皇帝':
-
-                user_hand = ['平民', '平民', '平民', '平民', '皇帝']
-
-                computer_hand = ['平民', '平民', '平民', '平民', '奴隶']
-
-            else:
-
-                user_hand = ['平民', '平民', '平民', '平民', '奴隶']
-
-                computer_hand = ['平民', '平民', '平民', '平民', '皇帝']
-
-            print(f&quot;用户角色: {user_role}, 电脑角色: {computer_role}&quot;)
-
-            for round_num in range(4):
-
-                if not user_hand or not computer_hand:
-
-                    break  # 如果手牌用光，结束回合
-
-                self.display_chips()  # 显示筹码
-
-                # 押注
-
-                user_bet, computer_bet = self.betting()
-
-                # 自动选择出牌，这里简单随机选，实际可优化策略
-
-                user_card = random.choice(user_hand)
-
-                user_hand.remove(user_card)
-
-                computer_card = random.choice(computer_hand)
-
-                computer_hand.remove(computer_card)
-
-                winner, win_type = self.play_round(user_card, computer_card)  # 判定胜负
-
-                if winner != 'draw':  # 如果有胜者
-
-                    # 结算筹码
-
-                    if winner == 'user':
-
-                        if win_type == 'slave':
-
-                            self.user_chips += computer_bet * self.slave_odds
-
-                            self.computer_chips -= computer_bet * self.slave_odds
-
-                        else:
-
-                            self.user_chips += computer_bet
-
-                            self.computer_chips -= computer_bet
-
-                    else:
-
-                        if win_type == 'slave':
-
-                            self.computer_chips += user_bet * self.slave_odds
-
-                            self.user_chips -= user_bet * self.slave_odds
-
-                        else:
-
-                            self.computer_chips += user_bet
-
-                            self.user_chips -= user_bet
-
-            if self.user_chips &lt;= 0:
-
-                print(&quot;用户筹码用光，游戏结束！&quot;)
-
-            elif self.computer_chips &lt;= 0:
-
-                print(&quot;电脑筹码用光，用户胜利！&quot;)
-
-# 创建自定义的Gym环境类，用于强化学习与CardGame交互
-
-class CardGameEnv(gym.Env):
-
-    def __init__(self):
-
-        super(CardGameEnv, self).__init__()
-
-        self.game = CardGame()
-
-        # 定义动作空间，这里有3种出牌选择（平民、皇帝、奴隶），所以离散空间大小为3
-
-        self.action_space = spaces.Discrete(3)
-
-        # 定义观察空间，用一个向量表示状态，包含用户筹码、电脑筹码、用户手牌数量、电脑手牌数量
-
-        self.observation_space = spaces.Box(low=0, high=np.inf, shape=(4,), dtype=np.float32)
-
-        # 新增统计变量
-
-        self.user_as_emperor_win_count = 0
-
-        self.user_as_slave_win_count = 0
-
-        self.computer_as_emperor_win_count = 0
-
-        self.computer_as_slave_win_count = 0
-
-        self.draw_count = 0
-
-    def reset(self):
-
-        &quot;&quot;&quot;
-
-        重置环境，开始新一局游戏
-
-        &quot;&quot;&quot;
-
-        self.game = CardGame()
-
-        return self._get_observation()
-
-    def step(self, action):
-
-        &quot;&quot;&quot;
-
-        执行一步动作，返回新的状态、奖励、是否结束以及额外信息
-
-        &quot;&quot;&quot;
-
-        user_role, computer_role = self.game.select_role()
-
-        if user_role == '皇帝':
-
-            user_hand = ['平民', '平民', '平民', '平民', '皇帝']
-
-            computer_hand = ['平民', '平民', '平民', '平民', '奴隶']
-
-        else:
-
-            user_hand = ['平民', '平民', '平民', '平民', '奴隶']
-
-            computer_hand = ['平民', '平民', '平民', '平民', '皇帝']
-
-        # 简单设置固定押注金额，实际可优化调整策略
-
-        user_bet = random.randint(1, self.game.user_chips)
-
-        computer_bet = random.randint(1, self.game.computer_chips)
-
-        # 根据动作选择出牌
-
-        if action == 0:
-
-            user_card = '平民'
-
-        elif action == 1:
-
-            user_card = '皇帝'
-
-        else:
-
-            user_card = '奴隶'
-
-        # 确保选择的牌在手牌中，避免之前的报错
-
-        if user_card not in user_hand:
-
-            user_card = random.choice(user_hand)
-
-        user_hand.remove(user_card)
-
-        # 电脑随机出牌
-
-        computer_card = random.choice(computer_hand)
-
-        computer_hand.remove(computer_card)
-
-        winner, win_type = self.game.play_round(user_card, computer_card)
-
-        # 根据新的返回值情况调整奖励计算逻辑，处理平局情况
-
-        if winner == 'user':
-
-            if user_role == '皇帝':
-
-                self.user_as_emperor_win_count += 1
-
-            else:
-
-                self.user_as_slave_win_count += 1
-
-            reward = 1
-
-        elif winner == 'computer':
-
-            if computer_role == '皇帝':
-
-                self.computer_as_emperor_win_count += 1
-
-            else:
-
-                self.computer_as_slave_win_count += 1
-
-            reward = -1
-
-        elif winner == 'draw':
-
-            self.draw_count += 1
-
-            reward = 0
-
-        else:
-
-            reward = 0
-
-        done = (self.game.user_chips &lt;= 0 or self.game.computer_chips &lt;= 0)
-
-        obs = self._get_observation()
-
-        info = {}
-
-        return obs, reward, done, info
-
-    def _get_observation(self):
-
-        &quot;&quot;&quot;
-
-        获取当前的游戏状态作为观察值，包含用户筹码、电脑筹码、用户手牌数量、电脑手牌数量
-
-        &quot;&quot;&quot;
-
-        user_hand_count = 5  # 初始手牌数量，可根据实际情况准确获取
-
-        computer_hand_count = 5
-
-        return np.array([self.game.user_chips, self.game.computer_chips, user_hand_count, computer_hand_count])
-
-if __name__ == &quot;__main__&quot;:
-
-    # 设置使用CPU，如需使用GPU可改为 'cuda'（前提是有合适的GPU环境支持）
-
-    device = torch.device(&quot;cpu&quot;)
-
-    env = CardGameEnv()
-
-    # 指定使用的策略并设置设备为CPU，这里使用MlpPolicy并设置设备
-
-    model = PPO(&quot;MlpPolicy&quot;, env, device=device, verbose=1)
-
-    total_timesteps = 1000  # 定义训练的总步数，可根据需求调整
-
-    # 创建保存模型的文件夹，如果不存在的话
-
-    if not os.path.exists(&quot;models&quot;):
-
-        os.makedirs(&quot;models&quot;)
-
-    # 记录训练配置信息
-
-    training_config = {
-
-        &quot;total_timesteps&quot;: total_timesteps,
-
-        &quot;algorithm&quot;: &quot;PPO&quot;,
-
-        &quot;policy&quot;: &quot;MlpPolicy&quot;,
-
-        &quot;device&quot;: device.type
-
-    }
-
-    try:
-
-        model.learn(total_timesteps=total_timesteps)
-
-        # 保存模型以及训练配置信息
-
-        model.save(&quot;models/card_game_model&quot;)
-
-        with open(&quot;models/training_config.pkl&quot;, &quot;wb&quot;) as config_file:
-
-            pickle.dump(training_config, config_file)
-
-        print(&quot;模型保存成功！&quot;)
-
-        # 训练结束后打印统计结果
-
-        print(&quot;用户作为皇帝获胜次数:&quot;, env.user_as_emperor_win_count)
-
-        print(&quot;用户作为奴隶获胜次数:&quot;, env.user_as_slave_win_count)
-
-        print(&quot;电脑作为皇帝获胜次数:&quot;, env.computer_as_emperor_win_count)
-
-        print(&quot;电脑作为奴隶获胜次数:&quot;, env.computer_as_slave_win_count)
-
-        print(&quot;平局次数:&quot;, env.draw_count)
-
-    except Exception as e:
-
-        print(f&quot;模型保存出现错误: {e}&quot;)
-
-```
-
-我设立了训练梯度，结果如下
-
-**2048次训练结果：**
-
-![2048.png](/images/e-card/2048.png)
-
-**4096次训练结果：**
-
-![4096.png](/images/e-card/4096.png)
-
-**8192次训练结果：**
-
-![8192.png](/images/e-card/8192.png)
-
-**16384次训练结果：**
-
-![16384.png](/images/e-card/16384.png)
-
-**32768次训练结果：**
-
-![32768.png](/images/e-card/32768.png)
-
-**65536次训练结果：**
-
-![65536.png](/images/e-card/65536.png)
-
-**155648次训练结果：**
-
-![155648.png](/images/e-card/155648.png)
-
-幸运的是AI作为皇帝的获胜次数明显高于电脑作为皇帝的获胜次数，甚至高于平局次数，这可能表明模型在AI作为皇帝时的策略比较有效。然而，AI作为奴隶的获胜次数远低于电脑作为奴隶的获胜次数，这可能表明模型在AI作为奴隶时的策略效果不佳。
-
-<ul>
-<li>`explained_variance`: 0，这表明当前的价值函数预测并不比随机猜测好，这可能是需要改进的地方。</li>
-</ul>
-注意到电脑作为奴隶随机出牌的胜率的不正常增加，表面“运气”随机在本游戏内占据很大的部分。
-
-总之在此代码游戏逻辑下，奴隶赔率为2时，以AI代表的用户作为奴隶方几乎没有优势。
-
-这可能和游戏代码设计有关，也可能和游戏逻辑有关。
-
-未来将着手训练更多次数，修改赔率，修改代码逻辑。
+未来将尝试修改奖励结构与赔率设定，研究均衡点的移动规律与收敛性表现。
